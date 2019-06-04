@@ -104,6 +104,7 @@ model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(128, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Flatten())
+model.add(layers.Dropout(0.5))
 model.add(layers.Dense(512, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
 
@@ -113,18 +114,28 @@ model.compile(loss='binary_crossentropy', optimizer=optimizers.RMSprop(lr=1e-4),
 
 # DATA PREPROCESSING
 
-train_datagen = ImageDataGenerator(rescale=1./255)
-test_datagen = ImageDataGenerator(rescale=1./255)
+train_datagen = ImageDataGenerator(
+    rescale=1. / 255,
+    rotation_range=40,
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    horizontal_flip=True, )
+
+test_datagen = ImageDataGenerator(rescale=1. / 255)
 
 train_generator = train_datagen.flow_from_directory(master_train_path, target_size=(150, 150),
-                                                    batch_size=20, class_mode='binary')
+                                                    batch_size=32, class_mode='binary')
 validation_generator = test_datagen.flow_from_directory(master_validation_path, target_size=(150, 150),
-                                                  batch_size=20, class_mode='binary')
-history = model.fit_generator(train_generator, steps_per_epoch=100, epochs=30,
+                                                        batch_size=32, class_mode='binary')
+history = model.fit_generator(train_generator, steps_per_epoch=100, epochs=100,
                               validation_data=validation_generator, validation_steps=50)
 
-if __name__ == "__main__":
+model.save('cats_vs_dogs_small_v2.h5')
 
+
+if __name__ == "__main__":
     # PLOTTING GRAPH DYNAMICS
 
     acc = history.history['acc']
