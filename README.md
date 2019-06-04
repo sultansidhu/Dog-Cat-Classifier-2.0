@@ -5,3 +5,5 @@ This neural network poses an improvement over the past implementation, and being
 #### June 4, 2019
 > Implemented a preliminary model that can have accuracy up to 86%. This network is completely native, non-pretrained model
 that has about 3.4 million trainable parameters. 
+##### Neural Net Architecture
+![Architecture Details](https://github.com/sultansidhu/Dog-Cat-Classifier-2.0/blob/master/ArchitectureNeuralNet.png)
